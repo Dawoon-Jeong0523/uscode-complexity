@@ -6,7 +6,7 @@ This repository provides tools and code to reconstruct and analyze the structura
 
 We leverage **OCR** and **Generative AI** techniques to recover and clean printed historical editions of the Code. This enables computational analysis of federal law even in periods before web-based digital access. The processing pipeline includes:
 
-- 📄 **Contents of U.S.~Code**: Word counts, unique word counts, entropy, scaling exponents, etc.
+- 📄 **Contents of U.S. Code**: Word counts, unique word counts, entropy, scaling exponents, etc.
 - 🌲 **Hierarchical Structure**: Subtitle → Part → Chapter → Section → Subsection...
 - 🔗 **Cross-Reference Relationships**: Title-to-title citation relationships
 
