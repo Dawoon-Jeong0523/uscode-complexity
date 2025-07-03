@@ -1,0 +1,25 @@
+# Ignore large CSV files
+Data/Word_count_df.csv
+Data/Data Records/Data Set3/edge_list_web.csv
+Data/Data Records/Data Set3/edge_list_ocr.csv
+
+# Ignore temporary files and checkpoints
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment files
+.env
+.venv/
+uscode-env*/

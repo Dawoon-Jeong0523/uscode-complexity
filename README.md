@@ -24,9 +24,9 @@ For the complete methodology and validation, please refer to our paper:
 ## 📁 Repository Structure
 
 ```
-├── Data/                             # Sample input data and organized folders
-│   ├── Data Records/                # Processed datasets for each level (structure, content, citation)
-│   ├── OCR samples/                 # Example scanned OCR text inputs
+├── Data/                           # Sample input data and organized folders
+│   ├── Data Records/               # Processed datasets for each level (structure, content, citation)
+│   ├── OCR samples/                # Example scanned OCR text inputs
 │   ├── OCR_sample_processed/       # Cleaned output from OCR preprocessing
 │   ├── Technical Validation/       # Datasets used for technical validation
 │   ├── US_govinfo/                 # Raw downloaded web-based U.S. Code (1994 sample)
