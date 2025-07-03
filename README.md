@@ -22,7 +22,7 @@ For the complete methodology and validation, please refer to our paper:
 📄 [Read the paper (link)](XXX)
 
 ## 📁 Repository Structure
-
+'''
 ├── Data/ # Sample input data and organized folders
 │ ├── Data Records/ # Processed datasets for each level (structure, content, citation, full dataset is hosted on Figshare)
 │ ├── OCR samples/ # Example scanned OCR text inputs
@@ -52,7 +52,7 @@ For the complete methodology and validation, please refer to our paper:
 
 ├── requirements.txt # Required Python libraries
 └── README.md # Project description
-
+'''
 💡 **Note:** The full raw and processed data for 1934–2023 is available on [Figshare](XXX). This repo includes only a subset (e.g., sample OCR and web-based titles from 1994) for demonstration purposes.
 
 
