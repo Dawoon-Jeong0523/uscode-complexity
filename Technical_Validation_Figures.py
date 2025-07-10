@@ -12,6 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
+from matplotlib.ticker import ScalarFormatter,MaxNLocator
 
 Title2Name = pd.read_csv('./Data/Title2Name.csv')
 Title2Name = dict(zip(Title2Name['Title num'], Title2Name['Title name']))
@@ -323,8 +324,6 @@ ax.set_ylabel('Benchmark Degree\nfrom Prior Work', fontsize=20)
 plt.savefig('./Figures/Figure 11E.pdf', dpi=600, bbox_inches='tight')
 
 
-
-
 ####################
 # === Figure 12AB ===
 
@@ -341,11 +340,10 @@ columns_to_plot = [
     ('Cleaned Text Unique Word Count_ocr', 'Cleaned Text Unique Word Count_web', r'$V_i$', 'Cleaned Text Unique Word Count')
 ]
 
-# === Initialize figure ===
+# === Figure 12AB ===
 fig, axes = plt.subplots(1, 2, figsize=(8, 4), constrained_layout=True)
 axes = axes.flatten()
 
-# === Iterate through each subplot ===
 for i, (x_col, y_col, base_label, title_label) in enumerate(columns_to_plot):
     ax = axes[i]
 
@@ -356,73 +354,74 @@ for i, (x_col, y_col, base_label, title_label) in enumerate(columns_to_plot):
     min_val = valid_data[[x_col, y_col]].min().min()
     max_val = valid_data[[x_col, y_col]].max().max()
 
-    # === Scatter all points in gray ===
+    # Scatter all points in gray
     ax.scatter(valid_data[x_col], valid_data[y_col], color='gray', alpha=0.4, s=20)
 
-    # === y = x line ===
+    # y = x line
     ax.plot([min_val, max_val], [min_val, max_val], linestyle='--', color='black', alpha=0.5)
 
-    # === Linear Regression vs. Identity Line ===
+    # Linear Regression for visual reference
     X_lin = valid_data[[x_col]]
     y_lin = valid_data[y_col]
     model = LinearRegression().fit(X_lin, y_lin)
-    y_pred = model.predict(X_lin)
 
-    # === Calculate R² for identity line ===
+    # R² for y = x line
     r2_identity = 1 - np.sum((y_lin - X_lin.values.flatten()) ** 2) / np.sum((y_lin - y_lin.mean()) ** 2)
-    rmse_identity = np.sqrt(np.mean((y_lin - X_lin.values.flatten()) ** 2))
 
-    # === Annotate R² ===
+    # Annotate R²
     ax.text(0.05, 0.90,
             r'$R^2_{{y=x}} = {:.2f}$'.format(r2_identity),
             fontsize=13, transform=ax.transAxes)
 
-    # === Axis labels ===
+    # Labels
     ax.set_xlabel(f'{base_label}$^{{\\mathrm{{ocr}}}}$', fontsize=20)
     ax.set_ylabel(f'{base_label}$^{{\\mathrm{{web}}}}$', fontsize=20)
     ax.set_xlim(min_val, max_val)
     ax.set_ylim(min_val, max_val)
 
-    # === Highlight specific titles (optional, currently commented) ===
-    annot_data = valid_data[valid_data['Title'].isin(title2color_highlight.keys())].drop_duplicates(subset='Title')
-    texts = []
+    # Scientific tick formatting
+    ax.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+    ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+    ax.xaxis.get_major_formatter().set_scientific(True)
+    ax.yaxis.get_major_formatter().set_scientific(True)
+    ax.xaxis.get_major_formatter().set_powerlimits((0, 0))
+    ax.yaxis.get_major_formatter().set_powerlimits((0, 0))
 
-# === Remove legend if present ===
+# Remove legend
 handles, labels = ax.get_legend_handles_labels()
 fig.legend(handles, labels, title="Title", loc='center right', bbox_to_anchor=(1.12, 0.5)).remove()
 
-# === Final layout and export ===
+# Save
 plt.savefig('./Figures/Figure 12AB.pdf', dpi=600, bbox_inches='tight')
 
-
-####################
 # === Figure 12CD ===
-# === Step 1: Filter valid citation data (remove NaNs and zeros) ===
+# Step 1: Filter valid citation data
 temp_df = Internal_validation_data2.dropna(subset=['Citation OCR', 'Citation Web'])
 temp_df = temp_df[(temp_df['Citation OCR'] > 0) & (temp_df['Citation Web'] > 0)]
 
-# === Step 2: Apply log transformation and perform linear regression ===
+# Step 2: Log-transform and regression
 X_log = np.log(temp_df[['Citation OCR']])
 y_log = np.log(temp_df['Citation Web'])
 model = LinearRegression().fit(X_log, y_log)
 y_pred = model.predict(X_log)
 
-# === Step 3: Compute regression statistics ===
+# Step 3: Regression statistics
 slope = model.coef_[0]
 n = len(X_log)
 residual_std = np.sqrt(np.sum((y_log - y_pred) ** 2) / (n - 2))
 x_std = np.std(X_log.values.flatten())
 std_slope = residual_std / (x_std * np.sqrt(n))
 
-# === Step 4: Identity line R² and RMSE ===
+# Step 4: R² and RMSE for identity line
 y_true = np.log(temp_df['Citation Web'].values)
 y_pred_identity = np.log(temp_df['Citation OCR'].values)
+r2_identity = 1 - np.sum((y_true - y_pred_identity) ** 2) / np.sum((y_true - y_true.mean()) ** 2)
 
-# === Step 5: Create 1x2 panel figure ===
+# Step 5: Plotting
 fig, axes = plt.subplots(1, 2, figsize=(8, 4), constrained_layout=True)
 ax1, ax2 = axes
 
-# --- Panel 1: Scatterplot of citation weights (OCR vs Web) ---
+# Panel 1: Scatterplot
 sns.scatterplot(data=temp_df, x='Citation OCR', y='Citation Web', ax=ax1,
                 color='gray', alpha=0.5)
 
@@ -435,13 +434,46 @@ ax1.set_ylim(min_val, max_val)
 ax1.set_xlabel('$Edge\\ weight^{ocr}$', fontsize=20)
 ax1.set_ylabel('$Edge\\ weight^{web}$', fontsize=20)
 
-# Display R² and RMSE for y = x reference line
+# R² annotation
 ax1.text(0.05, 0.90, r'$R^2_{{y=x}} = {:.2f}$'.format(r2_identity), fontsize=12, transform=ax1.transAxes)
 
-# --- Panel 2: Histogram of absolute difference (OCR - DS2) ---
+# Scientific ticks
+ax1.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax1.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax1.xaxis.get_major_formatter().set_scientific(True)
+ax1.yaxis.get_major_formatter().set_scientific(True)
+ax1.xaxis.get_major_formatter().set_powerlimits((0, 0))
+ax1.yaxis.get_major_formatter().set_powerlimits((0, 0))
+
+# --- Match tick spacing on both axes ---
+ax1.xaxis.set_major_locator(MaxNLocator(nbins=7))
+ax1.yaxis.set_major_locator(MaxNLocator(nbins=7))
+
+# Panel 2: Histogram of citation difference
 ax2.hist(temp_df['diff'], bins=100, color='steelblue', edgecolor='black', alpha=0.7)
 ax2.set_xlabel(r'$\Delta$ $Edge\ weight$', fontsize=20)
 ax2.set_ylabel('Frequency', fontsize=20)
 
-# === Step 6: Save the figure ===
+# Optional: scientific tick for histogram x-axis (if diff values large)
+ax2.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax2.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax2.xaxis.get_major_formatter().set_scientific(True)
+ax2.yaxis.get_major_formatter().set_scientific(True)
+ax2.xaxis.get_major_formatter().set_powerlimits((0, 0))
+ax2.yaxis.get_major_formatter().set_powerlimits((0, 0))
+
+# Panel 2: Histogram of citation difference
+ax2.hist(temp_df['diff'], bins=100, color='steelblue', edgecolor='black', alpha=0.7)
+ax2.set_xlabel(r'$\Delta$ $Edge\ weight$', fontsize=20)
+ax2.set_ylabel('Frequency', fontsize=20)
+
+# --- x-axis formatter with ×10^x notation at the top ---
+from matplotlib.ticker import ScalarFormatter
+formatter = ScalarFormatter(useMathText=True)
+formatter.set_scientific(True)
+formatter.set_powerlimits((0, 0))  # Force scientific
+formatter.set_useOffset(True)      # Show ×10^x on top
+ax2.xaxis.set_major_formatter(formatter)
+
+# Save
 plt.savefig('./Figures/Figure 12CD.pdf', dpi=600, bbox_inches='tight')
