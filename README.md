@@ -19,7 +19,7 @@ The **full dataset**, including all structured data and graphs for 1934–2023, 
 👉 [Download full dataset (Figshare link)](https://figshare.com/articles/dataset/A_Century_of_Evolution_in_the_Complexity_of_the_United_States_Legal_Code/29540039?file=56173127)
 
 For the complete methodology and validation, please refer to our paper:  
-📄 [Read the paper (link)](XXX)
+📄 [Read the paper (link)](https://arxiv.org/abs/2507.14342)
 
 ## 📁 Repository Structure
 
