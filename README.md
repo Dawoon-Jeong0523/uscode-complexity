@@ -1,4 +1,4 @@
-# 📘 A Century of Evolution in the Complexity of the United States Legal Code
+# 📘 A Dataset Showing a Century of Evolution in the Complexity of the United States Legal Code
 
 This repository provides tools and code to reconstruct and analyze the structural evolution of the **U.S. Code** over the past century (1934–2023), with a particular focus on editions before the digital era (pre-1994).
 
